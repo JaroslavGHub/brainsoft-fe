@@ -51,7 +51,7 @@ query { pokemons(query: { limit: 10, offset: 0 }) { edges { name } } }
 ```
 
 ### Frontend (`/frontend`)
-This is the place for your code.
+This is the place for your code.`
 
 ### Technology and boilerplate
 

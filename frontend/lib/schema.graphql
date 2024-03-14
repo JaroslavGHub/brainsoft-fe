@@ -1,0 +1,87 @@
+directive @cacheControl(maxAge: Int, scope: CacheControlScope) on FIELD_DEFINITION | OBJECT | INTERFACE
+
+type Attack {
+  name: String!
+  type: String!
+  damage: Int!
+}
+
+enum CacheControlScope {
+  PUBLIC
+  PRIVATE
+}
+
+type Mutation {
+  favoritePokemon(id: ID!): Pokemon
+  unFavoritePokemon(id: ID!): Pokemon
+}
+
+type Pokemon {
+  id: ID!
+  number: Int!
+  name: String!
+  weight: PokemonDimension!
+  height: PokemonDimension!
+  classification: String!
+  types: [String!]!
+  resistant: [String!]!
+  attacks: PokemonAttack!
+  weaknesses: [String!]!
+  fleeRate: Float!
+  maxCP: Int!
+  evolutions: [Pokemon!]!
+  evolutionRequirements: PokemonEvolutionRequirement
+  maxHP: Int!
+  image: String!
+  sound: String!
+  isFavorite: Boolean!
+}
+
+type PokemonAttack {
+  fast: [Attack!]!
+  special: [Attack!]!
+}
+
+type PokemonConnection {
+  limit: Int!
+  offset: Int!
+  count: Int!
+  edges: [Pokemon!]!
+}
+
+type PokemonDimension {
+  minimum: String!
+  maximum: String!
+}
+
+type PokemonEvolutionRequirement {
+  amount: Int!
+  name: String!
+}
+
+input PokemonFilterInput {
+  type: String
+  isFavorite: Boolean
+}
+
+input PokemonsQueryInput {
+  limit: Int = 10
+  offset: Int = 0
+  search: String
+  filter: PokemonFilterInput
+}
+
+type Query {
+  pokemons(query: PokemonsQueryInput!): PokemonConnection!
+  pokemonByName(name: String!): Pokemon
+  pokemonById(id: ID!): Pokemon
+  pokemonTypes: [String!]!
+}
+
+type Root {
+  query: Query!
+}
+
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
+
