@@ -1,7 +1,13 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ["img.pokemondb.net"],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "**.pokemondb.net",
+        port: "",
+      },
+    ],
   },
 };
 

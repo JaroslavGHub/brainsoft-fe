@@ -1,5 +1,5 @@
-import PokemonList from "@/app/pokenon-list";
+import Pokemons from "@/components/pokemons";
 
-export default function App() {
-  return <PokemonList />;
+export default async function App() {
+  return <Pokemons />;
 }
