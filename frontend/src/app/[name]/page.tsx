@@ -3,10 +3,9 @@
 import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
 import { getPokemonByName } from "@/service/pokemon-fetcher";
-import { CardDescription } from "@/components/card-description";
 import { ToggleFavoriteHeart } from "@/components/toggle-favorite";
 import { Pokemon } from "../../../lib/pokemon";
-import { EvolutionCard } from "@/components/evolution-card";
+import { CardDescription, EvolutionCard } from "@/components/pokemon-card";
 
 export default function PokemonDetail({
   params,

@@ -1,6 +1,7 @@
 import { FaHeart } from "react-icons/fa";
 import { toggleFavorite } from "@/service/favorite-toggle";
 import { Pokemon } from "../../lib/pokemon";
+import { toast } from "react-toastify";
 
 export const ToggleFavoriteHeart = ({
   pokemon,
@@ -11,11 +12,24 @@ export const ToggleFavoriteHeart = ({
 }): React.ReactNode => {
   const { id, isFavorite } = pokemon;
   const handleToggleFavorite = async () => {
-    console.log("formData");
-    console.log(pokemon);
-    toggleFavorite({ pokemon });
-    handleTriggerRefresh();
+    try {
+      toggleFavorite({ pokemon });
+      handleTriggerRefresh();
+      notify({ isFavorite: !isFavorite });
+    } catch (error) {
+      notifyError({ error: (error as Error).message });
+    }
   };
+
+  const notify = ({ isFavorite }: { isFavorite: boolean }) =>
+    toast(
+      `Pokemon ${pokemon.name} was ${
+        isFavorite ? "added to" : "removed from"
+      } favorite list!`
+    );
+
+  const notifyError = ({ error }: { error: string }) =>
+    toast(`An error occurred during this operation, ${error}`);
 
   return (
     <div

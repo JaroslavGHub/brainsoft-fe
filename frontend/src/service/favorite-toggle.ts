@@ -24,10 +24,10 @@ export const setPokemonFavorite = async ({
 
     return response.favoritePokemon;
   } catch (error) {
-    console.error("An unexpected error occurred:", error);
-    throw error;
+    throw new Error("Can not add pokemon to Favorite list");
   }
 };
+
 export const unsetPokemonFavorite = async ({
   pokemonId,
 }: {
@@ -45,8 +45,7 @@ export const unsetPokemonFavorite = async ({
 
     return response.unFavoritePokemon;
   } catch (error) {
-    console.error("An unexpected error occurred:", error);
-    throw error;
+    throw new Error("Can not remove pokemon from Favorite list");
   }
 };
 
@@ -55,13 +54,12 @@ export const toggleFavorite = async ({ pokemon }: { pokemon: Pokemon }) => {
     try {
       await setPokemonFavorite({ pokemonId: pokemon.id });
     } catch (error) {
-      console.error("Can not mark pokemon as not Favorite");
+      throw error;
     }
   } else {
     try {
       await unsetPokemonFavorite({ pokemonId: pokemon.id });
     } catch (error) {
-      console.error("Can not mark pokemon as Favorite");
       throw error;
     }
   }

@@ -1,8 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import PokemonGrid from "./pokemon-grid";
-import PokemonList from "./pokemon-list";
+import { PokemonList, PokemonGrid } from "./pokemon-list";
 import { Header } from "./header";
 import { getPokemonsAndTypes } from "@/service/pokemon-fetcher";
 import { Pokemon } from "../../lib/pokemon";

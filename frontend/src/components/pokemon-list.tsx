@@ -1,13 +1,13 @@
 import { Pokemon } from "../../lib/pokemon";
-import { PokemonListCard } from "./pokemon-list-card";
+import { PokemonGridCard, PokemonListCard } from "./pokemon-card";
 
-export default function PokemonList({
+export const PokemonList = ({
   pokemons,
   handleTriggerRefresh,
 }: {
   pokemons: Pokemon[];
   handleTriggerRefresh: () => void;
-}) {
+}) => {
   return (
     <div className="flex flex-col gap-2 p-2">
       {pokemons.map(
@@ -22,4 +22,27 @@ export default function PokemonList({
       )}
     </div>
   );
-}
+};
+
+export const PokemonGrid = ({
+  pokemons,
+  handleTriggerRefresh,
+}: {
+  pokemons: Pokemon[];
+  handleTriggerRefresh: () => void;
+}) => {
+  return (
+    <div className="grid lg:grid-cols-4 sm:grid-cols-3 grid-cols-2 gap-2 justify-center p-2">
+      {pokemons.map(
+        (pokemon) =>
+          pokemon && (
+            <PokemonGridCard
+              key={pokemon.id}
+              pokemon={pokemon}
+              handleTriggerRefresh={handleTriggerRefresh}
+            />
+          )
+      )}
+    </div>
+  );
+};
