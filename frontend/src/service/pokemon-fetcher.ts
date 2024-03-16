@@ -1,98 +1,48 @@
 "use server";
 
-import client from "../../lib/client";
-import { gql } from "@apollo/client";
-import { Pokemon } from "../../lib/graphql";
+import { client } from "../../lib/client";
+import { Pokemon, Query } from "../../lib/pokemon";
+import {
+  GetPokemonQuery,
+  GetPokemonsQuery,
+  PokemonTypesQuery,
+} from "../../lib/graphql";
 
-const QUERY_TYPES = gql`
-  query {
-    pokemonTypes
-  }
-`;
-
-const QUERY_ONE = gql`
-  query GetPokemon($name: String!) {
-    pokemon(name: $name) {
-      id
-      name
-      types
-      isFavorite
-      image
-    }
-  }
-`;
-
-const processParamsAndGenerateQuery = (props: {
-  onlyFavorite: boolean;
+export const getPokemonsAndTypes = async ({
+  name,
+  type,
+  isFavorite,
+}: {
   name?: string;
   type?: string;
-}) => {
-  let filter = "";
-  if (props.onlyFavorite || props.type) {
-    filter += `, filter: `;
-  }
-
-  if (props.onlyFavorite) {
-    filter += `{ isFavorite: true ${props.type ? "" : " }"}`;
-  }
-
-  if (props.type) {
-    filter += `${props.onlyFavorite ? ", " : "{"} type: "${props.type}" }`;
-  }
-
-  let search = "";
-  if (props.name) {
-    search += `, search: "${props.name}"`;
-  }
-
-  const query = `query {
-    pokemons(query: { limit: 1000, offset: 0 ${filter} ${search} }) {
-      edges {
-        id
-        name
-        types
-        isFavorite
-        image
-      }
-    }
-  }`;
-
-  console.log("QUERY");
-  console.log(query);
-
-  return gql`
-    ${query}
-  `;
-};
-
-export const getPokemons = async (props?: {
-  onlyFavorite: boolean;
-  name?: string;
-  type?: string;
-}): Promise<Pokemon[]> => {
-  const query = processParamsAndGenerateQuery({
-    onlyFavorite: props?.onlyFavorite ?? false,
-    name: props?.name,
-    type: props?.type,
-  });
+  isFavorite?: boolean;
+}): Promise<{
+  pokemons: Pokemon[];
+  types: string[];
+}> => {
+  let emptyPokemonAndTypes = {
+    pokemons: [],
+    types: [],
+  };
 
   try {
-    const { data, error } = await client.query({ query });
+    const response = await client.request<Query>(GetPokemonsQuery, {
+      name,
+      type,
+      isFavorite,
+    });
 
-    if (error) {
-      console.error("Error fetching pokemons:", error);
-      return [];
+    if (!response) {
+      return emptyPokemonAndTypes;
     }
 
-    if (!data || !data.pokemons || !data.pokemons.edges) {
-      console.error("Invalid data format:", data);
-      return [];
-    }
-
-    return data.pokemons.edges;
+    return {
+      pokemons: response.pokemons.edges,
+      types: response.pokemonTypes,
+    };
   } catch (error) {
     console.error("An unexpected error occurred:", error);
-    return [];
+    throw error;
   }
 };
 
@@ -102,51 +52,32 @@ export const getPokemonByName = async ({
   name: string;
 }): Promise<Pokemon | null> => {
   try {
-    const { data, error } = await client.query({
-      query: QUERY_ONE,
-      variables: { name },
+    const response = await client.request<Query>(GetPokemonQuery, {
+      name,
     });
 
-    if (error) {
-      console.error("Error fetching pokemon:", error);
+    if (!response || !response.pokemonByName) {
       return null;
     }
 
-    if (!data || !data.pokemon) {
-      console.error("Invalid data format:", data);
-      return null;
-    }
-
-    return data.pokemon;
+    return response.pokemonByName;
   } catch (error) {
     console.error("An unexpected error occurred:", error);
-    return null;
+    throw error;
   }
 };
 
-export const getPokemonTypes = async (): Promise<string[]> => {
+export const getPokemonTypes = async (): Promise<Pokemon["types"]> => {
   try {
-    const { data, error } = await client.query({
-      query: gql`
-        query {
-          pokemonTypes
-        }
-      `,
-    });
+    const response = await client.request<Pokemon["types"]>(PokemonTypesQuery);
 
-    if (error) {
-      console.error("Error fetching pokemon types:", error);
+    if (!response) {
       return [];
     }
 
-    if (!data || !data.pokemonTypes) {
-      console.error("Invalid data format:", data);
-      return [];
-    }
-
-    return data.pokemonTypes;
+    return response;
   } catch (error) {
     console.error("An unexpected error occurred:", error);
-    return [];
+    throw error;
   }
 };

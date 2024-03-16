@@ -1,8 +1,5 @@
-import { ApolloClient, InMemoryCache } from "@apollo/client";
+import { GraphQLClient } from "graphql-request";
 
-const client = new ApolloClient({
-  uri: process.env.PUBLIC_URL_SERVER_GRAPHQL,
-  cache: new InMemoryCache(),
-});
-
-export default client;
+export const client = new GraphQLClient(
+  process.env.PUBLIC_URL_SERVER_GRAPHQL ?? ""
+);

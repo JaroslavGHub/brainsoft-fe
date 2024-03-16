@@ -1,5 +1,5 @@
 import Pokemons from "@/components/pokemons";
 
-export default async function App() {
+export default function App() {
   return <Pokemons />;
 }

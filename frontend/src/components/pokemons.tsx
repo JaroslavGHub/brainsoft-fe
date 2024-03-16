@@ -1,45 +1,51 @@
 "use client";
 
-import { Pokemon } from "../../lib/graphql";
 import { useCallback, useEffect, useState } from "react";
 import PokemonGrid from "./pokemon-grid";
 import PokemonList from "./pokemon-list";
 import { Header } from "./header";
-import { getPokemonTypes, getPokemons } from "@/service/pokemon-fetcher";
+import { getPokemonsAndTypes } from "@/service/pokemon-fetcher";
+import { Pokemon, Query } from "../../lib/pokemon";
+import Loading from "@/app/loading";
+import useSWR from "swr";
+import { client } from "../../lib/client";
+import { GetPokemonQuery } from "../../lib/graphql";
+import { Variables } from "graphql-request";
 
 export type LayoutType = "LIST" | "GRID";
 export type ViewFilter = "ALL" | "FAVORITE";
 
-export default function Pokemons() {
-  const [pokemons, setPokemons] = useState<Pokemon[]>([]);
-  const [types, setTypes] = useState<string[]>([]);
+export default function App() {
+  const [fetchError, setFetchError] = useState<any>(null);
+  const [pokemons, setPokemons] = useState<Pokemon[]>();
+  const [types, setTypes] = useState<string[]>();
 
   const [layout, setLayout] = useState<LayoutType>("GRID");
-  const [onlyFavorite, setOnlyFavorite] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
   const [name, setName] = useState<string>();
   const [type, setType] = useState<string>();
 
   const fetchPokemonsData = useCallback(async () => {
     try {
-      const data = await getPokemons({ onlyFavorite, name, type });
-      const types = await getPokemonTypes();
-      setPokemons(data);
-      setTypes(types);
+      const data = await getPokemonsAndTypes({ isFavorite, name, type });
+      setPokemons(data.pokemons);
+      setTypes(data.types);
     } catch (error) {
-      console.error("Error fetching pokemons:", error);
+      console.error("Error fetching pokemons and types:", error);
+      setFetchError(error);
     }
-  }, [onlyFavorite, name, type]);
+  }, [isFavorite, name, type]);
 
   useEffect(() => {
     fetchPokemonsData();
-  }, [fetchPokemonsData, onlyFavorite, name, type]);
+  }, [fetchPokemonsData, isFavorite, name, type]);
 
   const handleLayoutChange = (type: LayoutType) => {
     setLayout(type);
   };
 
   const handleAllFavorite = (type: ViewFilter) => {
-    setOnlyFavorite(type === "FAVORITE");
+    setIsFavorite(type === "FAVORITE");
   };
 
   const handleSearchChange = (name: string) => {
@@ -54,20 +60,38 @@ export default function Pokemons() {
     }
   };
 
+  if (fetchError !== null) {
+    return (
+      <p className="text-center">
+        Can not access data, please make sure the BE is running.
+      </p>
+    );
+  }
+
+  if (!pokemons || !types) {
+    return <Loading />;
+  }
+
   return (
     <>
       <Header
         types={types}
-        showAll={!onlyFavorite}
+        showAll={!isFavorite}
         handleLayoutChange={handleLayoutChange}
         handleAllFavorite={handleAllFavorite}
         handleSearchChange={handleSearchChange}
         handleTypeChange={handleTypeChange}
       />
       {layout === "GRID" ? (
-        <PokemonGrid pokemons={pokemons} />
+        <PokemonGrid
+          pokemons={pokemons}
+          handleTriggerRefresh={fetchPokemonsData}
+        />
       ) : (
-        <PokemonList pokemons={pokemons} />
+        <PokemonList
+          pokemons={pokemons}
+          handleTriggerRefresh={fetchPokemonsData}
+        />
       )}
     </>
   );

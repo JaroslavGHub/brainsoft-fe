@@ -1,32 +1,40 @@
 import { FaHeart } from "react-icons/fa";
 import { toggleFavorite } from "@/service/favorite-toggle";
+import { Pokemon } from "../../lib/pokemon";
 
-export const ToggleFavoriteHeart = (props: {
-  id: string;
-  isFavorite: boolean;
+export const ToggleFavoriteHeart = ({
+  pokemon,
+  handleTriggerRefresh,
+}: {
+  pokemon: Pokemon;
+  handleTriggerRefresh: () => void;
 }): React.ReactNode => {
-  const handleToggleFavorite = async (formData: FormData) => {
-    toggleFavorite(formData);
+  const { id, isFavorite } = pokemon;
+  const handleToggleFavorite = async () => {
+    console.log("formData");
+    console.log(pokemon);
+    toggleFavorite({ pokemon });
+    handleTriggerRefresh();
   };
 
   return (
-    <form
+    <div
       className="flex flex-col justify-center"
-      action={handleToggleFavorite}
+      onClick={handleToggleFavorite}
     >
-      <input type="text" name="id" hidden defaultValue={props.id} />
+      <input type="text" name="id" hidden defaultValue={id} />
       <input
         type="text"
         name="isFavorite"
         hidden
-        defaultValue={props.isFavorite ? 1 : 0}
+        defaultValue={isFavorite ? 1 : 0}
       />
       <button
         type="submit"
         className="flex flex-col justify-center items-end w-1/4 text-left"
       >
-        <FaHeart color={props.isFavorite ? "red" : "black"} />
+        <FaHeart color={isFavorite ? "red" : "black"} />
       </button>
-    </form>
+    </div>
   );
 };

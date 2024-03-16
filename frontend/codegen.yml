@@ -1,5 +1,5 @@
 schema: lib/schema.graphql
 generates:
-  lib/graphql.ts:
+  lib/pokemon.ts:
     plugins:
       - "typescript"

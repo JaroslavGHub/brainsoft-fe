@@ -1,7 +1,14 @@
 import { FaList, FaTh } from "react-icons/fa";
 import { LayoutType, ViewFilter } from "./pokemons";
 
-export const Header = (props: {
+export const Header = ({
+  showAll,
+  types,
+  handleAllFavorite,
+  handleLayoutChange,
+  handleSearchChange,
+  handleTypeChange,
+}: {
   showAll: boolean;
   types: string[];
   handleAllFavorite: (value: ViewFilter) => void;
@@ -15,22 +22,18 @@ export const Header = (props: {
         <button
           type="submit"
           className={`flex-1 border-solid border-2 border-green-500  ${
-            props.showAll
-              ? "bg-green-500 text-white"
-              : "bg-white text-green-500"
+            showAll ? "bg-green-500 text-white" : "bg-white text-green-500"
           }`}
-          onClick={() => props.handleAllFavorite("ALL")}
+          onClick={() => handleAllFavorite("ALL")}
         >
           All
         </button>
         <button
           type="submit"
           className={`flex-1 border-solid border-2 border-green-500 ${
-            !props.showAll
-              ? "bg-green-500 text-white"
-              : "bg-white text-green-500"
+            !showAll ? "bg-green-500 text-white" : "bg-white text-green-500"
           }`}
-          onClick={() => props.handleAllFavorite("FAVORITE")}
+          onClick={() => handleAllFavorite("FAVORITE")}
         >
           Favorite
         </button>
@@ -39,30 +42,30 @@ export const Header = (props: {
         <input
           type="text"
           placeholder="Type something..."
-          className="w-3/5 px-2"
-          onChange={(event) => props.handleSearchChange(event.target.value)}
+          className="w-full px-2"
+          onChange={(event) => handleSearchChange(event.target.value)}
         />
         <select
-          className="w-1/5"
-          onChange={(event) => props.handleTypeChange(event.target.value)}
+          className="w-2/5 p-1"
+          onChange={(event) => handleTypeChange(event.target.value)}
         >
           <option key={"all"} value={""}>
             All
           </option>
-          {props.types.map((type) => (
+          {types.map((type) => (
             <option key={type} value={type}>
               {type}
             </option>
           ))}
         </select>
-        <div className="flex justify-evenly w-1/5">
+        <div className="flex justify-evenly">
           <FaList
-            className="text-green-500 w-10 h-10 cursor-pointer"
-            onClick={() => props.handleLayoutChange("LIST")}
+            className="text-green-500 w-10 h-10 p-1 cursor-pointer"
+            onClick={() => handleLayoutChange("LIST")}
           />
           <FaTh
-            className="text-green-500 w-10 h-10 cursor-pointer"
-            onClick={() => props.handleLayoutChange("GRID")}
+            className="text-green-500 w-10 h-10 p-1 cursor-pointer"
+            onClick={() => handleLayoutChange("GRID")}
           />
         </div>
       </div>

@@ -1,12 +1,24 @@
-import { Pokemon } from "../../lib/graphql";
+import { Pokemon } from "../../lib/pokemon";
 import { PokemonListCard } from "./pokemon-list-card";
 
-export default function PokemonList(props: { pokemons: Pokemon[] }) {
+export default function PokemonList({
+  pokemons,
+  handleTriggerRefresh,
+}: {
+  pokemons: Pokemon[];
+  handleTriggerRefresh: () => void;
+}) {
   return (
     <div className="flex flex-col gap-2 p-2">
-      {props.pokemons.map(
+      {pokemons.map(
         (pokemon) =>
-          pokemon && <PokemonListCard key={pokemon.id} pokemon={pokemon} />
+          pokemon && (
+            <PokemonListCard
+              key={pokemon.id}
+              pokemon={pokemon}
+              handleTriggerRefresh={handleTriggerRefresh}
+            />
+          )
       )}
     </div>
   );
