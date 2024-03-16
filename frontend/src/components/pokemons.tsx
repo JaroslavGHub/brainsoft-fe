@@ -5,12 +5,8 @@ import PokemonGrid from "./pokemon-grid";
 import PokemonList from "./pokemon-list";
 import { Header } from "./header";
 import { getPokemonsAndTypes } from "@/service/pokemon-fetcher";
-import { Pokemon, Query } from "../../lib/pokemon";
+import { Pokemon } from "../../lib/pokemon";
 import Loading from "@/app/loading";
-import useSWR from "swr";
-import { client } from "../../lib/client";
-import { GetPokemonQuery } from "../../lib/graphql";
-import { Variables } from "graphql-request";
 
 export type LayoutType = "LIST" | "GRID";
 export type ViewFilter = "ALL" | "FAVORITE";

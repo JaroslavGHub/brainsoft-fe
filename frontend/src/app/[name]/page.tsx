@@ -60,13 +60,13 @@ export default function PokemonDetail({
         <div className="flex flex-col w-full p-2 bg-slate-100">
           <div className="flex w-full justify-between items-center">
             <span className="flex w-full h-3 mr-3 bg-violet-400 rounded-lg"></span>
-            <p className="flex min-w-30 text-nowrap text-lg font-bold">
+            <p className="flex min-w-[80px] text-nowrap text-lg font-bold">
               CP: {pokemon.maxCP}
             </p>
           </div>
           <div className="flex w-full justify-between items-center">
             <span className="flex w-full h-3 mr-3 bg-green-400 rounded-lg"></span>
-            <p className="flex min-w-30 text-nowrap text-lg font-bold">
+            <p className="flex min-w-[80px] text-nowrap text-lg font-bold">
               HP: {pokemon.maxHP}
             </p>
           </div>

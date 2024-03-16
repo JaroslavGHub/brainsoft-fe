@@ -1,5 +1,6 @@
 import { FaList, FaTh } from "react-icons/fa";
 import { LayoutType, ViewFilter } from "./pokemons";
+import { useCallback, useRef, useState } from "react";
 
 export const Header = ({
   showAll,
@@ -16,6 +17,23 @@ export const Header = ({
   handleSearchChange: (value: string) => void;
   handleTypeChange: (value: string) => void;
 }) => {
+  const [searchValue, setSearchValue] = useState<string>("");
+  const typingTimer = useRef<NodeJS.Timeout | null>(null);
+
+  const handleChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const { value } = event.target;
+      setSearchValue(value);
+      if (typingTimer.current) {
+        clearTimeout(typingTimer.current);
+      }
+      typingTimer.current = setTimeout(() => {
+        handleSearchChange(searchValue);
+      }, 500);
+    },
+    [handleSearchChange, searchValue]
+  );
+
   return (
     <div className="flex flex-col gap-2 p-2 sticky top-0 z-100 w-full h-[100px] bg-gray-50">
       <div className="flex flex-row w-full h-1/2 gap-2">
@@ -43,7 +61,7 @@ export const Header = ({
           type="text"
           placeholder="Type something..."
           className="w-full px-2"
-          onChange={(event) => handleSearchChange(event.target.value)}
+          onChange={handleChange}
         />
         <select
           className="w-2/5 p-1"
