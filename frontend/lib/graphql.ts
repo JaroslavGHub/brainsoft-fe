@@ -24,6 +24,12 @@ export const GetPokemonQuery = gql`
         minimum
         maximum
       }
+      evolutions {
+        id
+        name
+        image
+        isFavorite
+      }
     }
   }
 `;
