@@ -74,7 +74,6 @@ export default function PokemonDetail({
             </div>
           </div>
         </div>
-
         <div className="flex flex-row justify-evenly w-full">
           <div className="flex flex-col w-full border-s-orange-50 border border-solid p-5">
             <p className="text-center text-lg font-bold">Weight</p>
@@ -90,18 +89,21 @@ export default function PokemonDetail({
           </div>
         </div>
       </div>
-      <div className="flex flex-col justify-start w-full my-4">
-        <p className="text-lg font-bold">Evolutions</p>
-        <div className="flex flex-row gap-2">
-          {pokemon.evolutions.map((evolutionPokemon) => (
-            <EvolutionCard
-              key={evolutionPokemon.id}
-              pokemon={evolutionPokemon}
-              handleTriggerRefresh={fetchPokemonData}
-            />
-          ))}
+
+      {pokemon.evolutions.length > 0 && (
+        <div className="flex flex-col justify-start w-full my-4">
+          <p className="text-lg font-bold">Evolutions</p>
+          <div className="flex flex-row gap-2">
+            {pokemon.evolutions.map((evolutionPokemon) => (
+              <EvolutionCard
+                key={evolutionPokemon.id}
+                pokemon={evolutionPokemon}
+                handleTriggerRefresh={fetchPokemonData}
+              />
+            ))}
+          </div>
         </div>
-      </div>
+      )}
     </>
   );
 }
