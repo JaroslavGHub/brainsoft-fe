@@ -9,7 +9,7 @@ export const PokemonList = ({
   handleTriggerRefresh: () => void;
 }) => {
   return (
-    <div className="flex flex-col gap-2 p-2">
+    <div className="flex flex-col gap-2 justify-center p-2">
       {pokemons.map(
         (pokemon) =>
           pokemon && (

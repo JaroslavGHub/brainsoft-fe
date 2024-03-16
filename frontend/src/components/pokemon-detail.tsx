@@ -1,0 +1,94 @@
+import Image from "next/image";
+import { Pokemon } from "../../lib/pokemon";
+import { CardDescription, EvolutionCard } from "./pokemon-card";
+import { ToggleFavoriteHeart } from "./toggle-favorite";
+
+export const PokemonDetailCard = ({
+  pokemon,
+  fetchPokemonData,
+}: {
+  pokemon: Pokemon;
+  fetchPokemonData: () => void;
+}) => {
+  if (!pokemon) {
+    return <p>Loading...</p>;
+  }
+
+  console.log(pokemon);
+
+  return (
+    <>
+      <div
+        key={pokemon.id}
+        className="flex flex-col justify-between items-center border-solid border border-gray-300 rounded"
+      >
+        <div className="h-[450px] p-2 flex justify-center items-center">
+          <Image
+            src={pokemon.image}
+            alt={pokemon.name}
+            width={450}
+            height={450}
+            className="object-contain max-h-full max-w-full"
+          />
+        </div>
+
+        <div className="flex flex-col w-full">
+          <div className="flex flex-row w-full p-2 bg-slate-100 ">
+            <CardDescription
+              name={pokemon.name}
+              types={pokemon.types}
+              titleClass="text-2xl"
+            />
+            <ToggleFavoriteHeart
+              pokemon={pokemon}
+              handleTriggerRefresh={fetchPokemonData}
+            />
+          </div>
+          <div className="flex flex-col w-full p-2 bg-slate-100">
+            <div className="flex w-full justify-between items-center">
+              <span className="flex w-full h-3 mr-3 bg-violet-400 rounded-lg"></span>
+              <p className="flex min-w-[100px] text-nowrap text-lg font-bold text-left">
+                CP: {pokemon.maxCP}
+              </p>
+            </div>
+            <div className="flex w-full justify-between items-center">
+              <span className="flex w-full h-3 mr-3 bg-green-400 rounded-lg"></span>
+              <p className="flex min-w-[100px] text-nowrap text-lg font-bold text-left">
+                HP: {pokemon.maxHP}
+              </p>
+            </div>
+          </div>
+        </div>
+        <div className="flex flex-row justify-evenly w-full">
+          <div className="flex flex-col w-full border-s-orange-50 border border-solid p-5">
+            <p className="text-center text-lg font-bold">Weight</p>
+            <p className="text-center">
+              {pokemon.weight.minimum} - {pokemon.weight.maximum}
+            </p>
+          </div>
+          <div className="flex flex-col w-full border-s-orange-50 border border-solid p-5">
+            <p className="text-center text-lg font-bold">Height</p>
+            <p className="text-center">
+              {pokemon.height.minimum} - {pokemon.height.maximum}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {pokemon.evolutions.length > 0 && (
+        <div className="flex flex-col justify-start w-full my-4">
+          <p className="text-lg font-bold">Evolutions</p>
+          <div className="flex flex-row gap-2">
+            {pokemon.evolutions.map((evolutionPokemon) => (
+              <EvolutionCard
+                key={evolutionPokemon.id}
+                pokemon={evolutionPokemon}
+                handleTriggerRefresh={fetchPokemonData}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+    </>
+  );
+};
