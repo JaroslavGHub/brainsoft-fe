@@ -4,6 +4,14 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ### GraphQL Client
 
+#### ENV Variable
+
+Set the .env variable
+
+```bash
+PUBLIC_URL_SERVER_GRAPHQL="BE-application-URL"
+```
+
 After installation of the packages run this command:
 
 ```bash
